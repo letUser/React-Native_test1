@@ -1,24 +1,26 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  FlatList,
-  Image,
-  Text,
-} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
 import API from '../api/index';
+import {Response, MovieParams} from '@interfaces/api';
+import FilmItem from './FilmItem';
 
-const FilmInfo = ({navigation, route}: any) => {
-  const [loaded, update] = React.useState(false);
-  const [dataError, setDataError] = React.useState('');
+const FilmInfo = ({route}: any) => {
+  const [info, setInfo] = React.useState<MovieParams>();
+  const [cast, setCast] = React.useState<Response>();
 
   const getItems = async () => {
     try {
-      await API.getFilmInfo(route.params.id);
+      const [infoData, castData] = await Promise.all([
+        API.getFilmInfo(route.params.id),
+        API.getFilmCast(route.params.id),
+      ]);
+
+      setInfo(infoData);
+      setCast(castData);
+
+      console.log(castData, infoData);
     } catch (err: any) {
-      setDataError(err.error);
+      throw err;
     }
   };
 
@@ -26,9 +28,16 @@ const FilmInfo = ({navigation, route}: any) => {
     getItems();
   }, []);
 
-  return <SafeAreaView />;
+  return (
+    <SafeAreaView>
+      {info && (
+        <FilmItem prop={info} />
+      )}
+    </SafeAreaView>
+  );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+});
 
 export default FilmInfo;

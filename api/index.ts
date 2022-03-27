@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {LoginParams, MovieParams} from '@interfaces/api';
+import {Response, LoginParams, MovieParams} from '@interfaces/api';
 import {User, Error, Movie} from '../classes/index';
 
 const API = {
@@ -33,28 +33,28 @@ const API = {
     return axios
       .get('https://sarzhevsky.com/movies-api/Movies')
       .then(res => {
-        if (res?.data) {
-          return res?.data.map((i: MovieParams) => new Movie(i));
-        } else {
-          throw {
-            response: {
-              data: {
-                errorMessage:
-                  "Can't reach Movie list. Please, contact administrator.",
-              },
-            },
-          };
-        }
+        return res?.data?.map((i: MovieParams) => new Movie(i));
       })
       .catch(err => {
         throw new Error(err);
       });
   },
+
   async getFilmInfo(id: number): Promise<Movie> {
     return axios
       .get(`https://sarzhevsky.com/movies-api/Movies/${id}/Info`)
       .then(res => {
-        console.log(res?.data);
+        return new Movie(res?.data);
+      })
+      .catch(err => {
+        throw new Error(err);
+      });
+  },
+
+  async getFilmCast(id: number): Promise<Response> {
+    return axios
+      .get(`https://sarzhevsky.com/movies-api/Movies/${id}/Cast`)
+      .then(res => {
         return res?.data;
       })
       .catch(err => {

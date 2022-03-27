@@ -26,9 +26,9 @@ export interface LoginParams {
 
 export interface MovieParams {
   readonly id: number;
-  readonly duration: string;
-  readonly posterUrl?: string;
-  readonly rating?: string;
+  readonly duration?: string | undefined;
+  readonly posterUrl?: string | undefined;
+  readonly rating?: string | undefined;
   readonly title: string;
-  readonly year?: string;
+  readonly year?: string | undefined;
 }
