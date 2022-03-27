@@ -8,10 +8,16 @@ const API = {
     return axios
       .post('https://sarzhevsky.com/movies-api/Login', params)
       .then(res => {
-        return new User(res);
+        const data = new User(res);
+
+        if (data?.tokenType && data?.token) {
+          axios.defaults.headers.common.Authorization = `${data.tokenType} ${data.token}`;
+        }
+
+        return data;
       })
       .catch(err => {
-        return new Error(err);
+        throw new Error(err);
       });
   },
 };
