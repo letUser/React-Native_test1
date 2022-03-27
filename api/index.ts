@@ -72,6 +72,16 @@ const API = {
         throw new Error(err);
       });
   },
+
+  async sendComment(id: number, message: string): Promise<Response> {
+    return axios
+      .post(`https://sarzhevsky.com/movies-api/Movies/${id}/Comments/Post`, {
+        message,
+      })
+      .catch(err => {
+        throw new Error(err);
+      });
+  },
 };
 
 export default API;

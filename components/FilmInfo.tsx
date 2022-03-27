@@ -7,6 +7,11 @@ import {
   FlatList,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
+  Dimensions,
+  KeyboardAvoidingView,
+  Alert,
+  Keyboard,
 } from 'react-native';
 import API from '../api/index';
 import {Response, MovieParams} from '@interfaces/api';
@@ -34,8 +39,19 @@ const FilmInfo = ({navigation, route}: any) => {
       setComments(commentsData);
     } catch (err: any) {
       navigation.goBack();
+      Alert.alert('Error', "Sorry, but we can't proceed with your request.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const submitComment = async () => {
+    if (text?.length > 0) {
+      await API.sendComment(route.params.id, text);
+      setText('');
+      Keyboard.dismiss();
+      const commentsData = await API.getComments(route.params.id);
+      setComments(commentsData);
     }
   };
 
@@ -44,45 +60,62 @@ const FilmInfo = ({navigation, route}: any) => {
   }, []);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex: 1}}>
       {!loading && (
-        <View style={styles.container}>
-          <View style={styles.wrapper}>
-            {info && <FilmItem prop={info} />}
-            {cast && (
-              <View style={styles.wrapperCast}>
-                <Text style={styles.label}>Cast:</Text>
-                <Text style={styles.cast}>{cast}</Text>
-              </View>
-            )}
-          </View>
-          <View style={styles.wrapperList}>
-            <Text style={styles.labelComment}>Comments:</Text>
-            <FlatList
-              style={styles.list}
-              data={comments}
-              keyExtractor={item => item.id}
-              renderItem={({item}: any) => (
-                <View style={styles.comment}>
-                  <Text style={styles.name}>{item.created_at}</Text>
-                  <Text style={styles.text}>{item.message}</Text>
+        <KeyboardAvoidingView
+          behavior="position"
+          keyboardVerticalOffset={75}
+          style={{flex: 1}}>
+          <View style={styles.container}>
+            <View style={styles.wrapper}>
+              {info && <FilmItem prop={info} />}
+              {cast && (
+                <View style={styles.wrapperCast}>
+                  <Text style={styles.label}>Cast:</Text>
+                  <Text style={styles.cast}>{cast}</Text>
                 </View>
               )}
-            />
+            </View>
+            <View style={styles.wrapperList}>
+              <Text style={styles.labelComment}>Comments:</Text>
+              <FlatList
+                style={styles.list}
+                data={comments}
+                keyExtractor={item => item.id}
+                renderItem={({item}: any) => (
+                  <View style={styles.comment}>
+                    <Text style={styles.name}>{item.created_at}</Text>
+                    <Text style={styles.text}>{item.message}</Text>
+                  </View>
+                )}
+              />
+            </View>
+            <View style={styles.wrapperText}>
+              <TextInput
+                onChangeText={setText}
+                value={text}
+                style={styles.textInput}
+                placeholder="Type a comment..."
+              />
+              <TouchableOpacity
+                onPress={submitComment}
+                disabled={text.length < 1}>
+                <View style={text.length < 1 ? styles.disabled : styles.button}>
+                  <Text style={styles.textButton}>Send</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.wrapperText}>
-            <TextInput
-              onChangeText={setText}
-              value={text}
-              style={styles.textInput}
-              placeholder="Type a comment..."
-            />
-            <TouchableOpacity onPress={() => {}}>
-              <View style={styles.button}>
-                <Text style={styles.textButton}>Send</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+        </KeyboardAvoidingView>
+      )}
+      {loading && (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <ActivityIndicator size="large" />
         </View>
       )}
     </SafeAreaView>
@@ -107,7 +140,7 @@ const styles = StyleSheet.create({
     marginRight: 28,
   },
   wrapperList: {
-    height: 350,
+    height: Dimensions.get('window').height / 2,
   },
   wrapperText: {
     display: 'flex',
@@ -125,7 +158,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   labelComment: {
-    margin: 20,
+    margin: 12,
     fontWeight: 'bold',
     fontSize: 18,
   },
@@ -159,6 +192,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: 40,
   },
+  disabled: {
+    width: 100,
+    height: 40,
+    alignSelf: 'center',
+    backgroundColor: '#BBBBBB',
+    borderRadius: 14,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   button: {
     width: 100,
     height: 40,
@@ -172,6 +215,11 @@ const styles = StyleSheet.create({
   textButton: {
     fontWeight: 'bold',
     color: 'white',
+  },
+  loader: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
