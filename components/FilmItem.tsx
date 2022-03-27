@@ -2,7 +2,6 @@ import React, {memo} from 'react';
 import {SafeAreaView, StyleSheet, View, Image, Text} from 'react-native';
 
 const FilmItem = ({prop}: any) => {
-  console.log(prop);
   return (
     <SafeAreaView>
       <View style={styles.wrapperList}>

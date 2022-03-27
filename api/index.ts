@@ -55,6 +55,17 @@ const API = {
     return axios
       .get(`https://sarzhevsky.com/movies-api/Movies/${id}/Cast`)
       .then(res => {
+        return res?.data?.join(', ');
+      })
+      .catch(err => {
+        throw new Error(err);
+      });
+  },
+
+  async getComments(id: number): Promise<Response> {
+    return axios
+      .get(`https://sarzhevsky.com/movies-api/Movies/${id}/Comments`)
+      .then(res => {
         return res?.data;
       })
       .catch(err => {
