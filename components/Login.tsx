@@ -10,8 +10,8 @@ import {
 import API from '../api/index';
 
 const Login = ({navigation}: any) => {
-  const [username, onChangeUsername] = React.useState('');
-  const [password, onChangePassword] = React.useState('');
+  const [username, onChangeUsername] = React.useState('dale@appcreative.com');
+  const [password, onChangePassword] = React.useState('Udt9TzzPwnednVV4');
   const [errorUsernameText, setErrorUsernameText] = React.useState('');
   const [errorPasswordText, setErrorPasswordText] = React.useState('');
   const [errorFetchText, setErrorFetchText] = React.useState('');
