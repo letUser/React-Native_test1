@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     marginRight: 28,
   },
   wrapperList: {
-    height: Dimensions.get('window').height / 2,
+    height: Dimensions.get('window').height / 2.1,
   },
   wrapperText: {
     display: 'flex',
