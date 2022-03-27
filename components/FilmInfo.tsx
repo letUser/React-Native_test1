@@ -17,6 +17,8 @@ import API from '../api/index';
 import {Response, MovieParams} from '@interfaces/api';
 import FilmItem from './FilmItem';
 
+const ERROR_MESSAGE = "Sorry, but we can't proceed with your request.";
+
 const FilmInfo = ({navigation, route}: any) => {
   const [info, setInfo] = React.useState<MovieParams>();
   const [cast, setCast] = React.useState<Response>();
@@ -39,7 +41,7 @@ const FilmInfo = ({navigation, route}: any) => {
       setComments(commentsData);
     } catch (err: any) {
       navigation.goBack();
-      Alert.alert('Error', "Sorry, but we can't proceed with your request.");
+      Alert.alert('Error', ERROR_MESSAGE);
     } finally {
       setLoading(false);
     }
@@ -47,11 +49,15 @@ const FilmInfo = ({navigation, route}: any) => {
 
   const submitComment = async () => {
     if (text?.length > 0) {
-      await API.sendComment(route.params.id, text);
-      setText('');
-      Keyboard.dismiss();
-      const commentsData = await API.getComments(route.params.id);
-      setComments(commentsData);
+      try {
+        await API.sendComment(route.params.id, text);
+        setText('');
+        Keyboard.dismiss();
+        const commentsData = await API.getComments(route.params.id);
+        setComments(commentsData);
+      } catch (err: any) {
+        Alert.alert('Error', err.error ?? ERROR_MESSAGE);
+      }
     }
   };
 
