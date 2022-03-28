@@ -19,6 +19,7 @@ import FilmItem from './FilmItem';
 
 const ERROR_MESSAGE = "Sorry, but we can't proceed with your request.";
 const shortScreen = Dimensions.get('window').height < 540;
+const longScreen = Dimensions.get('window').height > 740;
 
 const FilmInfo = ({navigation, route}: any) => {
   const [info, setInfo] = React.useState<MovieParams>();
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
     marginRight: 28,
   },
   wrapperList: {
-    height: shortScreen ? '40%' : '57%',
+    height: shortScreen ? '40%' : longScreen ? '57%' : '53%',
   },
   wrapperText: {
     display: 'flex',
