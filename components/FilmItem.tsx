@@ -1,5 +1,14 @@
 import React, {memo} from 'react';
-import {SafeAreaView, StyleSheet, View, Image, Text} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  Dimensions,
+} from 'react-native';
+
+const shortScreen = Dimensions.get('window').height < 540;
 
 const FilmItem = ({prop}: any) => {
   return (
@@ -39,14 +48,14 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   wrapperImage: {
-    width: 90,
+    width: shortScreen ? 70 : 90,
   },
   wrapperLabel: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
     margin: 5,
-    width: 80,
+    width: shortScreen ? 60 : 80,
   },
   wrapperText: {
     display: 'flex',
@@ -55,15 +64,17 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   poster: {
-    width: 65,
-    height: 100,
+    width: shortScreen ? 55 : 65,
+    height: shortScreen ? 85 : 100,
   },
   label: {
     color: '#B4B4B4',
     fontWeight: 'bold',
+    fontSize: shortScreen ? 12 : 14,
   },
   info: {
     fontWeight: 'bold',
+    fontSize: shortScreen ? 12 : 14,
   },
 });
 

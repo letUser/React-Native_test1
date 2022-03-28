@@ -18,6 +18,7 @@ import {Response, MovieParams} from '@interfaces/api';
 import FilmItem from './FilmItem';
 
 const ERROR_MESSAGE = "Sorry, but we can't proceed with your request.";
+const shortScreen = Dimensions.get('window').height < 540;
 
 const FilmInfo = ({navigation, route}: any) => {
   const [info, setInfo] = React.useState<MovieParams>();
@@ -66,12 +67,12 @@ const FilmInfo = ({navigation, route}: any) => {
   }, []);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{height: '100%'}}>
       {!loading && (
         <KeyboardAvoidingView
           behavior="position"
           keyboardVerticalOffset={75}
-          style={{flex: 1}}>
+          style={{height: '100%'}}>
           <View style={styles.container}>
             <View style={styles.wrapper}>
               {info && <FilmItem prop={info} />}
@@ -83,7 +84,9 @@ const FilmInfo = ({navigation, route}: any) => {
               )}
             </View>
             <View style={styles.wrapperList}>
-              <Text style={styles.labelComment}>Comments:</Text>
+              {!shortScreen && (
+                <Text style={styles.labelComment}>Comments:</Text>
+              )}
               <FlatList
                 style={styles.list}
                 data={comments}
@@ -146,7 +149,7 @@ const styles = StyleSheet.create({
     marginRight: 28,
   },
   wrapperList: {
-    height: Dimensions.get('window').height / 2.1,
+    height: shortScreen ? '40%' : '57%',
   },
   wrapperText: {
     display: 'flex',
@@ -162,6 +165,7 @@ const styles = StyleSheet.create({
   cast: {
     fontWeight: 'bold',
     paddingBottom: 20,
+    fontSize: shortScreen ? 12 : 14,
   },
   labelComment: {
     margin: 12,
@@ -185,9 +189,11 @@ const styles = StyleSheet.create({
     borderBottomColor: 'grey',
     borderBottomWidth: 1,
     padding: 5,
+    fontSize: shortScreen ? 12 : 14,
   },
   text: {
     padding: 5,
+    fontSize: shortScreen ? 12 : 14,
   },
   textInput: {
     width: 240,
@@ -197,6 +203,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     height: 40,
+    fontSize: shortScreen ? 12 : 14,
   },
   disabled: {
     width: 100,
@@ -221,6 +228,7 @@ const styles = StyleSheet.create({
   textButton: {
     fontWeight: 'bold',
     color: 'white',
+    fontSize: shortScreen ? 12 : 14,
   },
   loader: {
     display: 'flex',
